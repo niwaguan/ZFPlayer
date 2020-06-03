@@ -1083,6 +1083,8 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
     } else {
         self.scrollView.zf_playingIndexPath = playingIndexPath;
     }
+    
+    self.currentPlayIndex = playingIndexPath ? playingIndexPath.item : NSNotFound;
 }
 
 - (void)setShouldAutoPlay:(BOOL)shouldAutoPlay {

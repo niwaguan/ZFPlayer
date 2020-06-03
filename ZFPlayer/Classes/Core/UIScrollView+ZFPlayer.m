@@ -756,7 +756,6 @@ Scroll to indexPath with position.
             return;
         }
         if (handler) handler(indexPath);
-        self.zf_playingIndexPath = indexPath;
     }];
 }
 
