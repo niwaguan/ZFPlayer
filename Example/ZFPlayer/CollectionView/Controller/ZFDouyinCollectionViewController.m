@@ -11,8 +11,9 @@
 #import "ZFTableData.h"
 #import <ZFPlayer/ZFPlayer.h>
 #import <ZFPlayer/ZFAVPlayerManager.h>
+#import <ZFPlayer/ZFIJKPlayerManager.h>
 #import <ZFPlayer/ZFPlayerControlView.h>
-#import <ZFPlayer/KSMediaPlayerManager.h>
+//#import <ZFPlayer/KSMediaPlayerManager.h>
 #import <ZFPlayer/UIView+ZFFrame.h>
 #import "UINavigationController+FDFullscreenPopGesture.h"
 #import "ZFDouYinControlView.h"
@@ -40,7 +41,8 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     [self requestData];
     
     /// playerManager
-    ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+//    ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
+    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
     
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.collectionView playerManager:playerManager containerViewTag:kPlayerViewTag];

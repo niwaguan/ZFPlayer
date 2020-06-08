@@ -1,6 +1,6 @@
 {
   "name": "ZFPlayer",
-  "version": "3.2.16",
+  "version": "3.3.2",
   "summary": "A good player made by renzifeng",
   "homepage": "https://github.com/renzifeng/ZFPlayer",
   "license": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/renzifeng/ZFPlayer.git",
-    "tag": "3.2.16"
+    "tag": "3.3.2"
   },
   "social_media_url": "http://weibo.com/zifeng1300",
   "platforms": {
@@ -20,6 +20,7 @@
   },
   "requires_arc": true,
   "static_framework": true,
+  "default_subspecs": "Core",
   "subspecs": [
     {
       "name": "Core",
@@ -59,6 +60,9 @@
       "dependencies": {
         "ZFPlayer/Core": [
 
+        ],
+        "IJKMediaFramework": [
+
         ]
       },
       "platforms": {
@@ -71,6 +75,9 @@
       "public_header_files": "ZFPlayer/Classes/KSYMediaPlayer/*.h",
       "dependencies": {
         "ZFPlayer/Core": [
+
+        ],
+        "KSYMediaPlayer": [
 
         ]
       },
