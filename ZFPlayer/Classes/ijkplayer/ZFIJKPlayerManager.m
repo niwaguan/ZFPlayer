@@ -30,12 +30,19 @@
 #endif
 #if __has_include(<IJKMediaFramework/IJKMediaFramework.h>)
 
+// player status
+// setURL()-prepare()____preparing_____prepared-play()-pause()-stop()
+
 @interface ZFIJKPlayerManager ()
 @property (nonatomic, strong) IJKFFMoviePlayerController *player;
 @property (nonatomic, strong) IJKFFOptions *options;
 @property (nonatomic, assign) CGFloat lastVolume;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) BOOL isReadyToPlay;
+/// 是否在准备过程中,该阶段无法进行播放,暂停应该打断之后的自动播放
+@property (nonatomic, readwrite, assign) BOOL isPreparing;
+/// 是否需要打断播放
+@property (nonatomic, readwrite, assign) BOOL isPlayAbort;
 
 @end
 
@@ -81,11 +88,7 @@
 
 - (void)prepareToPlay {
     if (!_assetURL) return;
-    _isPreparedToPlay = YES;
     [self initializePlayer];
-    if (self.shouldAutoPlay) {
-        [self play];
-    }
     self.loadState = ZFPlayerLoadStatePrepare;
     if (self.playerPrepareToPlay) self.playerPrepareToPlay(self, self.assetURL);
 }
@@ -95,8 +98,14 @@
 }
 
 - (void)play {
+    if (_isPreparing) {
+        _isPlayAbort = NO;
+        return;
+    }
     if (!_isPreparedToPlay) {
-        [self prepareToPlay];
+        if (!_isPreparing) {
+            [self prepareToPlay];
+        }
     } else {
         [self.player play];
         self.player.playbackRate = self.rate;
@@ -106,6 +115,10 @@
 }
 
 - (void)pause {
+    if (_isPreparing) {
+        _isPlayAbort = YES;
+        return;
+    }
     [self.player pause];
     _isPlaying = NO;
     self.playState = ZFPlayerPlayStatePaused;
@@ -154,8 +167,9 @@
 #pragma mark - private method
 
 - (void)initializePlayer {
+    self.isPreparing = YES;
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.assetURL withOptions:self.options];
-    self.player.shouldAutoplay = self.shouldAutoPlay;
+    self.player.shouldAutoplay = NO;
     [self.player prepareToPlay];
     
     [self.view insertSubview:self.player.view atIndex:1];
@@ -259,13 +273,15 @@
 // 准备开始播放了
 - (void)mediaIsPreparedToPlayDidChange:(NSNotification *)notification {
     ZFPlayerLog(@"加载状态变成了已经缓存完成，如果设置了自动播放, 会自动播放");
+    _isPreparedToPlay = YES;
+    _isPreparing = NO;
     // 视频开始播放的时候开启计时器
     if (!self.timer) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeRefreshInterval > 0 ? self.timeRefreshInterval : 0.1 target:self selector:@selector(timerUpdate) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     }
     
-    if (self.isPlaying) {
+    if (self.shouldAutoPlay && self.isPlayAbort == NO) {
         [self play];
         self.muted = self.muted;
         if (self.seekTime > 0) {
@@ -273,6 +289,9 @@
             self.seekTime = 0; // 滞空, 防止下次播放出错
             [self play];
         }
+    }
+    if (self.isPlayAbort) {
+        self.isPlayAbort = NO;
     }
     if (self.playerReadyToPlay) self.playerReadyToPlay(self, self.assetURL);
 }

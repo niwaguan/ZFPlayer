@@ -249,7 +249,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         _notification.willResignActive = ^(ZFPlayerNotification * _Nonnull registrar) {
             @strongify(self)
             if (self.isViewControllerDisappear) return;
-            if (self.pauseWhenAppResignActive && self.currentPlayerManager.isPlaying) {
+            if (self.pauseWhenAppResignActive) {
                 self.pauseByEvent = YES;
             }
             self.orientationObserver.lockedScreen = YES;
