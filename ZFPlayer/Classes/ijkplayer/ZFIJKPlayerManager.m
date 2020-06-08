@@ -148,6 +148,7 @@
         if (finished) {
             [self play];
         }
+        self.isReadyToPlay = NO;
     }];
 }
 
