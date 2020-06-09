@@ -33,6 +33,7 @@
 // player status
 // setURL()-prepare()____preparing_____prepared-play()-pause()-stop()
 
+NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
 
 @interface ZFIJKPlayerManager ()
 @property (nonatomic, strong) IJKFFMoviePlayerController *player;
@@ -262,7 +263,8 @@
         case IJKMPMovieFinishReasonPlaybackError: {
             ZFPlayerLog(@"playbackStateDidChange: 播放出现错误: %d\n", reason);
             self.playState = ZFPlayerPlayStatePlayFailed;
-            if (self.playerPlayFailed) self.playerPlayFailed(self, @(reason));
+            NSError *error = [NSError errorWithDomain:ZFIJKPlayerManagerErrorDomain code:reason userInfo:@{}];
+            if (self.playerPlayFailed) self.playerPlayFailed(self, error);
         }
             break;
             

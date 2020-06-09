@@ -32,6 +32,7 @@
 #if __has_include(<IJKMediaFrameworkWithSSL/IJKMediaFrameworkWithSSL.h>)
 #import <IJKMediaFrameworkWithSSL/IJKMediaFrameworkWithSSL.h>
 
+FOUNDATION_EXPORT NSErrorDomain ZFIJKPlayerManagerErrorDomain;
 
 @interface ZFIJKPlayerManager : NSObject <ZFPlayerMediaPlayback>
 
