@@ -210,6 +210,8 @@ NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
                                              selector:@selector(sizeAvailableChange:)
                                                  name:IJKMPMovieNaturalSizeAvailableNotification
                                                object:self.player];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 - (void)removeMovieNotificationObservers {
@@ -376,6 +378,10 @@ NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
     if (self.presentationSizeChanged) {
         self.presentationSizeChanged(self, self->_presentationSize);
     }
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notify {
+    self.isPlayAbort = YES;
 }
 
 #pragma mark - getter
