@@ -212,6 +212,8 @@ NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
                                                object:self.player];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)removeMovieNotificationObservers {
@@ -382,6 +384,10 @@ NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
 
 - (void)applicationWillResignActive:(NSNotification *)notify {
     self.isPlayAbort = YES;
+}
+
+- (void)applicationBecomeActive:(NSNotification *)notify {
+    self.isPlayAbort = NO;
 }
 
 #pragma mark - getter
