@@ -249,7 +249,7 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
         _notification.willResignActive = ^(ZFPlayerNotification * _Nonnull registrar) {
             @strongify(self)
             if (self.isViewControllerDisappear) return;
-            if (self.pauseWhenAppResignActive) {
+            if (self.pauseWhenAppResignActive && self.currentPlayerManager.isPlaying) {
                 self.pauseByEvent = YES;
             }
             self.orientationObserver.lockedScreen = YES;
@@ -263,15 +263,6 @@ static NSMutableDictionary <NSString* ,NSNumber *> *_zfPlayRecords;
             @strongify(self)
             if (self.isViewControllerDisappear) return;
             if (self.isPauseByEvent) self.pauseByEvent = NO;
-            
-            // 正常播放->刷新播放列表->通知接收被移除->pauseByEvent无法被更新->APP退到后台
-            // ->APP到前台后pauseByEvent状态不正确->播放状态不正确
-            // 这里修复播放状态。低性能手机APP退到后台的通知晚于数据更新时间会发生该情况。
-            if (!self.pauseByEvent &&
-                self.shouldAutoPlay &&
-                !self.currentPlayerManager.isPlaying) {
-                [self.currentPlayerManager play];
-            }
             self.orientationObserver.lockedScreen = NO;
         };
         _notification.oldDeviceUnavailable = ^(ZFPlayerNotification * _Nonnull registrar) {
