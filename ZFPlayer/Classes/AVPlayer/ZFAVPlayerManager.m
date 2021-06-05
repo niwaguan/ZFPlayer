@@ -154,10 +154,12 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (!_isPreparedToPlay) {
         [self prepareToPlay];
     } else {
-        [self.player play];
-        self.player.rate = self.rate;
-        self->_isPlaying = YES;
-        self.playState = ZFPlayerPlayStatePlaying;
+        if (!_isAutoPlayAborted) {
+            [self.player play];
+            self.player.rate = self.rate;
+            self->_isPlaying = YES;
+            self.playState = ZFPlayerPlayStatePlaying;
+        }
     }
 }
 
@@ -437,6 +439,17 @@ static NSString *const kPresentationSize         = @"presentationSize";
 }
 
 #pragma mark - setter
+
+- (void)setIsAutoPlayAborted:(BOOL)isAutoPlayAborted {
+    if (_isAutoPlayAborted == isAutoPlayAborted) {
+        return;
+    }
+    
+    _isAutoPlayAborted = isAutoPlayAborted;
+    if (!_isAutoPlayAborted && _shouldAutoPlay && _isReadyToPlay) {
+        [self play];
+    }
+}
 
 - (void)setPlayState:(ZFPlayerPlaybackState)playState {
     _playState = playState;

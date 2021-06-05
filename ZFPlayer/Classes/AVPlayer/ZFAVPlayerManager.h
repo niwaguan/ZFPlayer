@@ -38,5 +38,7 @@
 @property (nonatomic, assign) NSTimeInterval timeRefreshInterval;
 /// 视频请求头
 @property (nonatomic, strong) NSDictionary *requestHeader;
+/// isAutoPlayAborted  提供自动播放开启时，打断加载过程后的自动播放
+@property (nonatomic, readwrite, assign) BOOL isAutoPlayAborted;
 
 @end
