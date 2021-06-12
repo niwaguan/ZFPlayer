@@ -261,6 +261,14 @@ static const CGFloat kAnimate = 0.3;
     }
 }
 
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    [super willMoveToWindow:newWindow];
+    if (newWindow && self.isLoading) {
+        [self stopAnimating];
+        [self startAnimating];
+    }
+}
+
 /**
  *  Starts animation of the spinner.
  */
