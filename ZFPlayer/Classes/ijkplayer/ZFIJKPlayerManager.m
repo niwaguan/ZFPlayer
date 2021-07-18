@@ -317,7 +317,7 @@ NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
     IJKMPMovieLoadState loadState = self.player.loadState;
     if ((loadState & IJKMPMovieLoadStatePlayable)) {
         ZFPlayerLog(@"加载状态变成了缓存数据足够开始播放，但是视频并没有缓存完全");
-        if (self.player.currentPlaybackTime > 0) {
+        if (self.player.playableDuration - self.player.currentPlaybackTime > 0) {
             self.loadState = ZFPlayerLoadStatePlayable;
         }
     } else if ((loadState & IJKMPMovieLoadStatePlaythroughOK)) {
