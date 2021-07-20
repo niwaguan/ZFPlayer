@@ -239,11 +239,19 @@ NSErrorDomain ZFIJKPlayerManagerErrorDomain = @"ZFIJKPlayerManagerErrorDomain";
         self.isReadyToPlay = YES;
         self.loadState = ZFPlayerLoadStatePlaythroughOK;
     }
-    self->_currentTime = self.player.currentPlaybackTime > 0 ? self.player.currentPlaybackTime : 0;
     self->_totalTime = self.player.duration;
-    self->_bufferTime = self.player.playableDuration;
-    if (self.playerPlayTimeChanged) self.playerPlayTimeChanged(self, self.currentTime, self.totalTime);
-    if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(self, self.bufferTime);
+    
+    NSTimeInterval diff = fabs(self.player.currentPlaybackTime - self->_currentTime);
+    // 播放进度，在有变化时才回调
+    if (diff >= 0.0001) {
+        self->_currentTime = self.player.currentPlaybackTime > 0 ? self.player.currentPlaybackTime : 0;
+        if (self.playerPlayTimeChanged) self.playerPlayTimeChanged(self, self.currentTime, self.totalTime);
+    }
+    diff = fabs(self.player.playableDuration - self->_bufferTime);
+    if (diff >= 0.0001) {
+        self->_bufferTime = self.player.playableDuration;
+        if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(self, self.bufferTime);
+    }
 }
 
 #pragma - notification
